@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Scary Maze Game</title>
+  <style>
+    body {
+      background-color: #8B0000; /* Deep red */
+    }
+
+    h1 {
+      color: #000; /* Black */
+      font-family: "Horror Type 400", serif;
+      text-align: center;
+    }
+
+    .center {
+      display: flex;
+      justify-content: center;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #007bff; /* Blue */
+      color: #fff;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: #003399; /* Dark blue */
+    }
+
+    .button::after {
+      content: "Provide Info";
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease;
+    }
+
+    .button:hover::after {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    /* Additional styles for the game */
+    #maze-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    
+    #maze {
+      font-family: monospace;
+      font-size: 24px;
+      line-height: 1;
+      color: #fff; /* White */
+    }
+    
+    .wall {
+      background-color: #000; /* Black */
+    }
+    
+    .path {
+      background-color: #666; /* Gray */
+    }
+    
+    .player {
+      background-color: #0f0; /* Green */
+    }
+    
+    .exit {
+      background-color: #f00; /* Red */
+    }
+  </style>
+</head>
+<body>
+  <h1>Scary Maze</h1>
+  <div class="center">
+    <button class="button" onclick="startGame()">Start Game</button>
+  </div>
+  <div id="maze-container">
+    <pre id="maze"></pre>
+  </div>
+
+  <script>
+    function startGame() {
+      const MAZE_SIZE = 10;
+      const WALL = '#';
+      const PATH = ' ';
+      const PLAYER = 'P';
+      const EXIT = 'E';
+
+      // Maze layout
+      const maze = [
+        ['#','#','#','#','#','#','#','#','#','#'],
+        ['#','P',' ','#',' ',' ','#',' ',' ','#'],
+        ['#','#',' ','#',' ','#','#',' ','#','#'],
+        ['#',' ',' ',' ',' ',' ','#',' ',' ','#'],
+        ['#','#','#','#',' ','#','#',' ','#','#'],
+        ['#',' ',' ',' ',' ','#',' ',' ',' ','#'],
+        ['#','#',' ','#','#','#','#',' ','#','#'],
+        ['#',' ',' ',' ','#',' ',' ',' ',' ','#'],
+        ['#',' ','#','#','#','#','#','#',' ','#'],
+        ['#','#','#','#','#','#','#','#','#','#'],
+      ];
+
+      // Player position
+      let playerX = 1;
+      let playerY = 1;
+
+      // Function to print the maze
+      function printMaze() {
+        const mazeContainer = document.getElementById("maze");
+        mazeContainer.innerHTML = "";
+
+        for (let i = 0; i < MAZE_SIZE; i++) {
+          for (let j = 0; j < MAZE_SIZE; j++) {
+            let cell = document.createElement("span");
+            cell.innerText =
