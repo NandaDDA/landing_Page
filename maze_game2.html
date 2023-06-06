@@ -75,8 +75,12 @@
       background-color: #f00; /* Red */
     }
     
-    .zombie {
+    .ghost {
       background-color: #f90; /* Orange */
+    }
+    
+    .zombie {
+      background-color: #f00; /* Red */
     }
   </style>
 </head>
@@ -96,6 +100,7 @@
       const PATH = ' ';
       const PLAYER = 'P';
       const EXIT = 'E';
+      const GHOST = 'G';
       const ZOMBIE = 'Z';
 
       // Maze layout
@@ -107,18 +112,22 @@
         ['#','#','#','#',' ','#','#',' ','#','#'],
         ['#',' ',' ',' ',' ','#',' ',' ',' ','#'],
         ['#','#',' ','#','#','#','#',' ','#','#'],
-        ['#',' ',' ',' ',' ',' ',' ',' ',' ','#'],
+        ['#',' ',' ',' ','#',' ',' ',' ',' ','#'],
         ['#',' ','#','#','#','#','#','#',' ','#'],
-        ['#','#','#','#','#','#','#','#',' ','#'],
+        ['#','#','#','#','#','#','#','#','#','#'],
       ];
 
       // Player position
       let playerX = 1;
       let playerY = 1;
 
+      // Ghost position
+      const ghostX = 7;
+      const ghostY = 3;
+
       // Zombie position
-      const zombieX = 7;
-      const zombieY = 3;
+      const zombieX = 3;
+      const zombieY = 5;
 
       // Function to print the maze
       function printMaze() {
@@ -142,6 +151,9 @@
                 break;
               case EXIT:
                 cell.className = "exit";
+                break;
+              case GHOST:
+                cell.className = "ghost";
                 break;
               case ZOMBIE:
                 cell.className = "zombie";
@@ -170,10 +182,33 @@
           if (maze[playerY][playerX] === EXIT) {
             endGame(true);
           } else {
+            moveGhost();
             moveZombie();
           }
-        } else if (maze[newY][newX] === ZOMBIE) {
+        } else if (maze[newY][newX] === GHOST || maze[newY][newX] === ZOMBIE) {
           endGame(false);
+        }
+      }
+
+      // Function to move the ghost
+      function moveGhost() {
+        let dx = Math.sign(playerX - ghostX);
+        let dy = Math.sign(playerY - ghostY);
+
+        let newX = ghostX + dx;
+        let newY = ghostY + dy;
+
+        if (maze[newY][newX] === PATH || maze[newY][newX] === PLAYER) {
+          maze[ghostY][ghostX] = PATH;
+          ghostX = newX;
+          ghostY = newY;
+          maze[ghostY][ghostX] = GHOST;
+
+          printMaze();
+
+          if (maze[ghostY][ghostX] === PLAYER) {
+            endGame(false);
+          }
         }
       }
 
@@ -204,7 +239,7 @@
         if (win) {
           alert("Congratulations! You reached the exit!");
         } else {
-          alert("Game over! The zombie caught you!");
+          alert("Game over! The ghost or zombie caught you!");
         }
         startGame();
       }
