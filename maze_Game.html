@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Maze Game</title>
+    <style>
+        /* CSS styles for the game */
+        #maze-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #maze {
+            font-family: monospace;
+            font-size: 24px;
+            line-height: 1;
+        }
+        .wall {
+            background-color: #000;
+            color: #fff;
+        }
+        .path {
+            background-color: #fff;
+            color: #000;
+        }
+        .player {
+            background-color: #0f0;
+            color: #000;
+        }
+        .exit {
+            background-color: #f00;
+            color: #fff;
+        }
+        .ghost {
+            background-color: #f90;
+            color: #000;
+            animation: ghostAnimation 1s infinite alternate;
+        }
+        .zombie {
+            background-color: #00f;
+            color: #fff;
+            animation: zombieAnimation 1s infinite alternate;
+        }
+        
+        @keyframes ghostAnimation {
+            0% {
+                transform: translateY(0);
+            }
+            100% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        @keyframes zombieAnimation {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(10px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="maze-container">
+        <button id="start-button">Start Game</button>
+        <pre id="maze"></pre>
+    </div>
+
+    <script>
+        // JavaScript code for the game
+        document.getElementById("start-button").addEventListener("click", startGame);
+
+        function startGame() {
+            const MAZE_SIZE = 10;
+            const WALL = '#';
+            const PATH = ' ';
+            const PLAYER = 'P';
+            const EXIT = 'E';
+            const GHOST = 'G';
+            const ZOMBIE = 'Z';
+
+            // Maze layout
+            const maze = [
+                ['#','#','#','#','#','#','#','#','#','#'],
+                ['#','P','#','#','#',' ','#',' ',' ','#'],
+                ['#','#',' ','#',' ','#','#',' ','#','#'],
+                ['#',' ',' ',' ',' ',' ','#',' ',' ','#'],
+                ['#','#','#','#',' ','#','#',' ','#','#'],
+                ['#',' ',' ',' ',' ','#',' ',' ',' ','#'],
+                ['#','#',' ','#','#','#','#',' ','#','#'],
+                ['#',' ',' ',' ','#',' ',' ',' ',' ','#'],
+                ['#',' ','#','#','#','#','#','#',' ','#'],
+                ['#','#','#','#','#','#','#','#','#','#'],
+            ];
+
+            // Player position
+            let playerX = 1;
+            let playerY = 1;
+
+            // Ghost position
+            const ghostX = 7;
+            const ghostY = 3;
+
+            // Zombie position
+            const zombieX = 4;
+            const zombieY = 5;
+
+            // Function to print the maze
+            function printMaze() {
+                const mazeContainer = document.getElementById("maze");
+                mazeContainer.innerHTML = "";
+
+                for (let i = 0; i < MAZE_SIZE; i++) {
+                    for (let j = 0; j < MAZE_SIZE; j++) {
+                        let cell = document.createElement("span");
+                        cell.innerText = maze[i][j];
+
+                        switch (maze[i][j]) {
+                            case WALL:
+                                cell.className = "wall";
+                                break;
+                            case PATH:
+                                cell.className = "path";
+                                break;
+                            case PLAYER:
+                                cell.className = "player";
+                                break;
+                            case EXIT:
+                                cell.className = "exit";
+                                break;
+                            case GHOST:
+                                cell.className = "ghost";
+                                break;
+                            case ZOMBIE:
+                                cell.className = "zombie";
+                                break;
+                        }
+
+                        mazeContainer.appendChild(cell);
+                    }
+                    mazeContainer.appendChild(document.createElement("br"));
+                }
+            }
+
+            // Function to move the player
+            function movePlayer(dx, dy) {
+                let newX = playerX + dx;
+                let newY = playerY + dy;
+
+                if (maze[newY][newX] === PATH || maze[newY][newX] === EXIT) {
+                    maze[playerY][playerX] = PATH;
+                    playerX = newX;
+                    playerY = newY;
+                    maze[playerY][playerX] = PLAYER;
+                    printMaze();
+                } else if (maze[newY][newX] === GHOST || maze[newY][newX] === ZOMBIE) {
+                    alert("Game Over! You were caught by a ghost or a zombie.");
+                    resetGame();
+                }
+            }
+
+            // Function to reset the game
+            function resetGame() {
+                playerX = 1;
+                playerY = 1;
+                printMaze();
+            }
+
+            // Function to handle keyboard input
+            document.addEventListener("keydown", function(event) {
+                switch(event.key) {
+                    case "ArrowUp":
+                        movePlayer(0, -1);
+                        break;
+                    case "ArrowDown":
+                        movePlayer(0, 1);
+                        break;
+                    case "ArrowLeft":
+                        movePlayer(-1, 0);
+                        break;
+                    case "ArrowRight":
+                        movePlayer(1, 0);
+                        break;
+                }
+            });
+
+            // Initialize the game
+            printMaze();
+        }
+    </script>
+</body>
+</html>
