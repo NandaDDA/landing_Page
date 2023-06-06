@@ -103,12 +103,12 @@
         let playerY = 1;
 
         // Ghost position
-        const ghostX = 7;
-        const ghostY = 3;
+        let ghostX = 7;
+        let ghostY = 3;
 
         // Zombie position
-        const zombieX = 12;
-        const zombieY = 10;
+        let zombieX = 12;
+        let zombieY = 10;
 
         // Function to print the maze
         function printMaze() {
@@ -157,13 +157,60 @@
                 playerX = newX;
                 playerY = newY;
                 maze[playerY] = maze[playerY].substr(0, playerX) + PLAYER + maze[playerY].substr(playerX + 1);
+            } else if (maze[newY][newX] === GHOST || maze[newY][newX] === ZOMBIE) {
+                alert("Game Over! You were caught by a ghost or zombie.");
+                resetGame();
+                return;
             }
 
             printMaze();
 
             if (maze[playerY][playerX] === EXIT) {
                 alert("Congratulations! You reached the exit.");
+                resetGame();
             }
+        }
+
+        // Function to reset the game
+        function resetGame() {
+            playerX = 1;
+            playerY = 1;
+            ghostX = 7;
+            ghostY = 3;
+            zombieX = 12;
+            zombieY = 10;
+
+            printMaze();
+        }
+
+        // Function to randomly move the ghosts and zombies
+        function moveGhostsAndZombies() {
+            const dx = [-1, 1, 0, 0];
+            const dy = [0, 0, -1, 1];
+
+            let ghostIndex = Math.floor(Math.random() * dx.length);
+            let newGhostX = ghostX + dx[ghostIndex];
+            let newGhostY = ghostY + dy[ghostIndex];
+
+            if (maze[newGhostY][newGhostX] === PATH || maze[newGhostY][newGhostX] === PLAYER) {
+                maze[ghostY] = maze[ghostY].substr(0, ghostX) + ' ' + maze[ghostY].substr(ghostX + 1);
+                ghostX = newGhostX;
+                ghostY = newGhostY;
+                maze[ghostY] = maze[ghostY].substr(0, ghostX) + GHOST + maze[ghostY].substr(ghostX + 1);
+            }
+
+            let zombieIndex = Math.floor(Math.random() * dx.length);
+            let newZombieX = zombieX + dx[zombieIndex];
+            let newZombieY = zombieY + dy[zombieIndex];
+
+            if (maze[newZombieY][newZombieX] === PATH || maze[newZombieY][newZombieX] === PLAYER) {
+                maze[zombieY] = maze[zombieY].substr(0, zombieX) + ' ' + maze[zombieY].substr(zombieX + 1);
+                zombieX = newZombieX;
+                zombieY = newZombieY;
+                maze[zombieY] = maze[zombieY].substr(0, zombieX) + ZOMBIE + maze[zombieY].substr(zombieX + 1);
+            }
+
+            printMaze();
         }
 
         // Function to handle keyboard events
@@ -182,12 +229,14 @@
                     movePlayer(1, 0);
                     break;
             }
+
+            moveGhostsAndZombies();
         }
 
-        // Bind the keyboard event handler
+        // Event listener for keyboard events
         document.addEventListener("keydown", handleKeyDown);
 
-        // Print the initial maze
+        // Initial game setup
         printMaze();
     </script>
 </body>
