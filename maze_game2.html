@@ -80,7 +80,7 @@
     }
     
     .zombie {
-      background-color: #f00; /* Red */
+      background-color: #00f; /* Blue */
     }
   </style>
 </head>
@@ -126,8 +126,8 @@
       const ghostY = 3;
 
       // Zombie position
-      const zombieX = 3;
-      const zombieY = 5;
+      const zombieX = 4;
+      const zombieY = 8;
 
       // Function to print the maze
       function printMaze() {
@@ -239,7 +239,7 @@
         if (win) {
           alert("Congratulations! You reached the exit!");
         } else {
-          alert("Game over! The ghost or zombie caught you!");
+          alert("Game over! You were caught by a ghost or zombie!");
         }
         startGame();
       }
