@@ -9,7 +9,7 @@
     }
 
     h1 {
-      color:#8B8000;
+      color: #8B8000;
       font-family: "Horror Font", serif;
       text-align: center;
       font-size: 48px;
@@ -46,7 +46,7 @@
       opacity: 1;
       visibility: visible;
     }
-    
+
     /* Additional styles for the game */
     #maze-container {
       display: flex;
@@ -54,40 +54,40 @@
       align-items: center;
       height: 100vh;
     }
-    
+
     #maze {
       font-family: monospace;
       font-size: 24px;
       line-height: 1;
       color: #fff; /* White */
     }
-    
+
     .wall {
       background-color: #000; /* Black */
     }
-    
+
     .path {
       background-color: #666; /* Gray */
     }
-    
+
     .player {
       background-color: #0f0; /* Green */
     }
-    
+
     .exit {
       background-color: #f00; /* Red */
     }
-    
+
     .ghost {
       background-color: #f90; /* Orange */
       animation: ghostAnimation 1s infinite alternate;
     }
-    
+
     .zombie {
       background-color: #00f; /* Blue */
       animation: zombieAnimation 1s infinite alternate;
     }
-    
+
     @keyframes ghostAnimation {
       from {
         transform: scale(1);
@@ -96,7 +96,7 @@
         transform: scale(1.2);
       }
     }
-    
+
     @keyframes zombieAnimation {
       from {
         transform: rotate(0);
@@ -117,7 +117,84 @@
   </div>
 
   <script>
-    // Game logic goes here...
+    function startGame() {
+      // Create the maze
+      const mazeSize = 30;
+      const mazeContainer = document.getElementById("maze");
+
+      // Define the maze layout
+      const mazeLayout = [
+        "##############################",
+        "#         #                  #",
+        "# ######  # ####### ######## #",
+        "#        #       # #        # #",
+        "#### #### ##### # # ## ##### #",
+        "# #  #        # # # ## #     #",
+        "# # ########## # # ## ##### #",
+        "# #        #   #          # #",
+        "# ######   # ########### ## #",
+        "#      #   #     #   #     # #",
+        "###### ####     #   # ### # #",
+        "#         ####### ###   # # #",
+        "# ### ###               # # #",
+        "# #   # ########## ##### # #",
+        "# ### # #            #   # #",
+        "#     # # ### # ##### ##### #",
+        "# ##### #   # #     #     # #",
+        "#       ### # ####### #######",
+        "# ##### # # #     # #       #",
+        "# #   # # # ### # # # ##### #",
+        "# # # # #   #   #   # #   # #",
+        "# # # ### # ### ####### # #",
+        "#   #   # #   #       # # #",
+        "##### # # ### ####### # #",
+        "#   # # # #   # #   # # #",
+        "# # # ### # # # ### # #",
+        "# #       #   #   #   #",
+        "# ########### ### #####",
+        "#                 #",
+        "##############################"
+      ];
+
+      // Generate the maze elements
+      for (let i = 0; i < mazeLayout.length; i++) {
+        const row = document.createElement("div");
+        for (let j = 0; j < mazeLayout[i].length; j++) {
+          const cell = document.createElement("span");
+          cell.style.width = "20px";
+          cell.style.height = "20px";
+          if (mazeLayout[i][j] === "#") {
+            cell.className = "wall";
+          } else {
+            cell.className = "path";
+          }
+          row.appendChild(cell);
+        }
+        mazeContainer.appendChild(row);
+      }
+
+      // Add the player and exit
+      const player = document.createElement("span");
+      player.className = "player";
+      mazeContainer.children[1].children[1].appendChild(player);
+
+      const exit = document.createElement("span");
+      exit.className = "exit";
+      mazeContainer.children[mazeSize - 2].children[mazeSize - 2].appendChild(exit);
+
+      // Add ghosts
+      const ghosts = [
+        { x: 5, y: 5 },
+        { x: 15, y: 15 },
+        { x: 25, y: 25 }
+      ];
+
+      for (const ghost of ghosts) {
+        const ghostElement = document.createElement("span");
+        ghostElement.className = "ghost";
+        mazeContainer.children[ghost.y].children[ghost.x].appendChild(ghostElement);
+      }
+    }
   </script>
 </body>
 </html>
